@@ -1,16 +1,11 @@
 const canvas = document.querySelector('canvas');
-canvas.addEventListener('keypress',doKeyDown, false);
+
 const c = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-function doKeyDown() {
-    console.log("TEST")
-    alert('hallo')
-}
-
-const gravity = 0.5;
+const gravity = 1.5;
 
 class Player {
     constructor() {
@@ -33,6 +28,7 @@ class Player {
 
     update() {
         this.draw();
+        this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
 
         if((this.position.y + this.height + this.velocity.y) < canvas.height) {
@@ -43,24 +39,41 @@ class Player {
             
     }
 
-    move(keyPressed) {
-        switch(keyPressed) {
-            case 37: console.log('vänster');//this.position.x -= 1; break;//Left key
-            case 38: this.position.y -= 1; break;//Up key
-            case 39: this.position.x += 1; break;//Right key
-        }
-    }
-
 }
 
 const player = new Player();
-
-player.update()
-
+const keys = {
+    right: {
+        pressed: false
+    },
+    left: {
+        pressed: false
+    }
+}
 function animate() {
     requestAnimationFrame(animate);
     c.clearRect(0, 0, canvas.width, canvas.height);
     player.update();
+    
+    if(keys.right.pressed) {
+        player.velocity.x = 5;
+    } else if (keys.left.pressed) {
+        player.velocity.x = -5    
+    } else player.velocity.x = 0;
 }
 
 animate();
+addEventListener('keydown', ({keyCode}) => {
+    switch(keyCode) {
+        case 37: keys.left.pressed = true; console.log(keys.left.pressed); break;//Left key
+        case 38: player.velocity.y -= 20; break;//Up key
+        case 39: keys.right.pressed = true; console.log(keys.right.pressed); break;//Right key
+    }
+})
+addEventListener('keyup', ({keyCode}) => {
+    switch(keyCode) {
+        case 37: keys.left.pressed = false; console.log(keys.left.pressed); break;//Left key
+        case 38: player.velocity.y = 0; break;//Up key
+        case 39: keys.right.pressed = false; console.log(keys.right.pressed); break;//Right key
+    }
+})
