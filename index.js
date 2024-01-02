@@ -1,10 +1,14 @@
 const canvas = document.querySelector('canvas');
-
+canvas.addEventListener('keypress',doKeyDown, false);
 const c = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-document.getElementById('canvas').addEventListener('keypress', move());
+
+function doKeyDown() {
+    console.log("TEST")
+    alert('hallo')
+}
 
 const gravity = 0.5;
 
