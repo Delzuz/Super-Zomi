@@ -3,29 +3,48 @@ const c = canvas.getContext("2d");
 const platformImgSrc = './img/platform.png';
 const backgroundImgSrc = './img/background.png'
 const hillsImgSrc = './img/hills.png'
+const playerImgSrc = './img/zomi7.png'
+const gravity = 1.5;
 
 canvas.width = 1024;
 canvas.height = 524;
 
-const gravity = 1.5;
+
+function createImage(imgSrc) {
+    const image = new Image();
+    image.src = imgSrc;
+    return image;
+}
+
+const platformImage = createImage(platformImgSrc);
+const backgroundImage = createImage(backgroundImgSrc);
+const hillsImage = createImage(hillsImgSrc);
+const playerImage = createImage(playerImgSrc);
 
 class Player {
-    constructor() {
+    constructor(image) {
+        this.speed = 8;
         this.position ={
             x: 100,
-            y: 100
+            y: 100,
+            image: image
         };
         this.velocity = {
             x: 0,
             y: 1
         }
-        this.width = 30;
-        this.height = 30;
+        // this.width = 30;
+        // this.height = 30;
+        this.image = image
+        this.width = image.width
+        this.height = image.height
     }
 
     draw() {
-        c.fillStyle = 'red';
-        c.fillRect(this.position.x, this.position.y, this.width, this.height);
+        c.drawImage(this.image, this.position.x, this.position.y)
+
+        // c.fillStyle = 'red';
+        // c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 
     update() {
@@ -38,16 +57,6 @@ class Player {
         }        
     }
 }
-
-function createImage(imgSrc) {
-    const image = new Image();
-    image.src = imgSrc;
-    return image;
-}
-
-const platformImage = createImage(platformImgSrc);
-const backgroundImage = createImage(backgroundImgSrc);
-const hillsImage = createImage(hillsImgSrc);
 
 class Platfrom {
     constructor({x, y, image}) {
@@ -82,7 +91,7 @@ class GenericObject {
 }
 
 function init() {
-    player = new Player();
+    player = new Player(playerImage);
     platforms = [new Platfrom({
         x: -1, y: 430, image: platformImage
     }), new Platfrom({
@@ -105,18 +114,13 @@ function init() {
 
     ]
 
-    let scrollOffset = 0; 
+    scrollOffset = 0; 
 }
 
-let player = new Player();
-let platforms = [new Platfrom({
-    x: -1, y: 430, image: platformImage
-}), new Platfrom({
-    x: platformImage.width -3, y: 430, image: platformImage
-}), new Platfrom({
-    x: platformImage.width * 2 + 100, y: 430, image: platformImage
-})
-];
+let player = "";
+let platforms = [];
+let genericObjects = [];
+
 const keys = {
     right: {
         pressed: false
@@ -125,20 +129,6 @@ const keys = {
         pressed: false
     }
 }
-let genericObjects = [
-    new GenericObject({
-        x: -1,
-        y: -1,
-        image: backgroundImage
-    }),
-    new GenericObject({
-        x: 0,
-        y: 0,
-        image: hillsImage
-    })
-
-]
-
 let scrollOffset = 0; 
 
 function animate() {
@@ -156,27 +146,27 @@ function animate() {
     // Här blir höger eller vänster tryck bearbeteade
     if(keys.right.pressed 
         && player.position.x < 400) {
-        player.velocity.x = 5;
-    } else if (keys.left.pressed
-        && player.position.x > 100) {
-        player.velocity.x = -5    
+        player.velocity.x = player.speed;
+    } else if ((keys.left.pressed
+        && player.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && player.position.x > 0)) {
+        player.velocity.x = -player.speed    
     } else {
         player.velocity.x = 0;
         if(keys.right.pressed) {
             scrollOffset += 5;
             platforms.forEach(platform => {
-                platform.position.x -= 5;
+                platform.position.x -= player.speed;
             })
             genericObjects.forEach(genericObject => {
-                genericObject.position.x -= 3;
+                genericObject.position.x -= player.speed * .66;
             })
-        } else if (keys.left.pressed) {
+        } else if (keys.left.pressed && scrollOffset > 0) {
             scrollOffset -= 5;
             platforms.forEach(platform => {
-                platform.position.x += 5;
+                platform.position.x += player.speed;
             })
             genericObjects.forEach(genericObject => {
-                genericObject.position.x += 3;
+                genericObject.position.x += player.speed * .66;
             })
         }
     }
@@ -194,19 +184,21 @@ function animate() {
     // win condition
     if(scrollOffset > 2000) {
         console.log("YOU WIN")
+        alert("YOU WIN!")
     }
 
     //Lose condition
     if(player.position.y > canvas.height) {
         init()
+        alert("You lose!")
     }
 }
-
+init();
 animate();
 addEventListener('keydown', ({keyCode}) => {
     switch(keyCode) {
         case 37: keys.left.pressed = true; console.log(keys.left.pressed); break;//Left key
-        case 38: player.velocity.y -= 30; break;//Up key
+        case 38: player.velocity.y -= 20; break;//Up key
         case 39: keys.right.pressed = true; console.log(keys.right.pressed); break;//Right key
     }
 })
