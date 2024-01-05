@@ -1,9 +1,11 @@
 const canvas = document.querySelector('canvas');
-
 const c = canvas.getContext("2d");
+const platformImgSrc = './img/platform.png';
+const backgroundImgSrc = './img/background.png'
+const hillsImgSrc = './img/hills.png'
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = 1024;
+canvas.height = 524;
 
 const gravity = 1.5;
 
@@ -33,33 +35,88 @@ class Player {
 
         if((this.position.y + this.height + this.velocity.y) < canvas.height) {
             this.velocity.y += gravity;
-        } else {
-            this.velocity.y = 0
         }        
     }
 }
 
+function createImage(imgSrc) {
+    const image = new Image();
+    image.src = imgSrc;
+    return image;
+}
+
+const platformImage = createImage(platformImgSrc);
+const backgroundImage = createImage(backgroundImgSrc);
+const hillsImage = createImage(hillsImgSrc);
+
 class Platfrom {
-    constructor({x, y}) {
+    constructor({x, y, image}) {
         this.position = {
             x,
             y
         }
-        this.width = 200
-        this.height = 20
+        this.image = image
+        this.width = image.width
+        this.height = image.height
     }
 
     draw() {
-        c.fillStyle = 'blue'
-        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        c.drawImage(this.image, this.position.x, this.position.y)
     }
 }
-const player = new Player();
-const platforms = [new Platfrom({
-    x: 200, y:100
+
+class GenericObject {
+    constructor({x, y, image}) {
+        this.position = {
+            x,
+            y
+        }
+        this.image = image
+        this.width = image.width
+        this.height = image.height
+    }
+
+    draw() {
+        c.drawImage(this.image, this.position.x, this.position.y)
+    }
+}
+
+function init() {
+    player = new Player();
+    platforms = [new Platfrom({
+        x: -1, y: 430, image: platformImage
+    }), new Platfrom({
+        x: platformImage.width -3, y: 430, image: platformImage
+    }), new Platfrom({
+        x: platformImage.width * 2 + 100, y: 430, image: platformImage
+    })
+    ];
+    genericObjects = [
+        new GenericObject({
+            x: -1,
+            y: -1,
+            image: backgroundImage
+        }),
+        new GenericObject({
+            x: 0,
+            y: 0,
+            image: hillsImage
+        })
+
+    ]
+
+    let scrollOffset = 0; 
+}
+
+let player = new Player();
+let platforms = [new Platfrom({
+    x: -1, y: 430, image: platformImage
 }), new Platfrom({
-    x: 500, y: 200
-})];
+    x: platformImage.width -3, y: 430, image: platformImage
+}), new Platfrom({
+    x: platformImage.width * 2 + 100, y: 430, image: platformImage
+})
+];
 const keys = {
     right: {
         pressed: false
@@ -68,16 +125,33 @@ const keys = {
         pressed: false
     }
 }
+let genericObjects = [
+    new GenericObject({
+        x: -1,
+        y: -1,
+        image: backgroundImage
+    }),
+    new GenericObject({
+        x: 0,
+        y: 0,
+        image: hillsImage
+    })
+
+]
 
 let scrollOffset = 0; 
 
 function animate() {
     requestAnimationFrame(animate);
-    c.clearRect(0, 0, canvas.width, canvas.height);
-    player.update();
+    c.fillStyle ='white'
+    c.fillRect(0, 0, canvas.width, canvas.height);
+    genericObjects.forEach(platform => {
+        platform.draw();
+    })
     platforms.forEach(platform => {
         platform.draw();
     })
+    player.update();
     
     // Här blir höger eller vänster tryck bearbeteade
     if(keys.right.pressed 
@@ -93,11 +167,16 @@ function animate() {
             platforms.forEach(platform => {
                 platform.position.x -= 5;
             })
-            
+            genericObjects.forEach(genericObject => {
+                genericObject.position.x -= 3;
+            })
         } else if (keys.left.pressed) {
             scrollOffset -= 5;
             platforms.forEach(platform => {
                 platform.position.x += 5;
+            })
+            genericObjects.forEach(genericObject => {
+                genericObject.position.x += 3;
             })
         }
     }
@@ -112,8 +191,14 @@ function animate() {
         }
     })
 
+    // win condition
     if(scrollOffset > 2000) {
         console.log("YOU WIN")
+    }
+
+    //Lose condition
+    if(player.position.y > canvas.height) {
+        init()
     }
 }
 
