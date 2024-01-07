@@ -7,6 +7,9 @@ const playerImgSrc = './img/zomi7.png'
 const playerspegelImgSrc = './img/zomispegel.png'
 const playerSitImgSrc = './img/zomisit1.png'
 const playerSitSpegelImgSrc = './img/zomisit1Spegel.png'
+const platfromSmallTallImgSrc = './img/platformSmallTall.png'
+const platfromSmallImgSrc = './img/platformSmall.png'
+const monsterImgSrc = './img/monster.png'
 const gravity = 1.5;
 
 canvas.width = 1024;
@@ -25,6 +28,9 @@ const playerSitSpegelImage = createImage(playerSitSpegelImgSrc);
 const platformImage = createImage(platformImgSrc);
 const backgroundImage = createImage(backgroundImgSrc);
 const hillsImage = createImage(hillsImgSrc);
+const platformSmallTall = createImage(platfromSmallTallImgSrc);
+const platformSmall = createImage(platfromSmallImgSrc);
+const monsterImage = createImage(monsterImgSrc);
 
 class Player {
     constructor(image) {
@@ -95,14 +101,66 @@ class GenericObject {
     }
 }
 
+class Monster {
+    constructor({x, y, image}) {
+        this.position = {
+            x,
+            y
+        }
+        this.image = image
+        this.width = image.width
+        this.height = image.height
+    }
+
+    draw() {
+        c.drawImage(this.image, this.position.x, this.position.y)
+    }
+}
+
 function init() {
     player = new Player(playerSitImage);
-    platforms = [new Platfrom({
+    platforms = [ new Platfrom({
+        x: platformImage.width * 4 + 9, y: 300, image: platformSmallTall
+    }), new Platfrom({
         x: -1, y: 430, image: platformImage
     }), new Platfrom({
         x: platformImage.width -3, y: 430, image: platformImage
     }), new Platfrom({
         x: platformImage.width * 2 + 100, y: 430, image: platformImage
+    }), new Platfrom({
+        x: platformImage.width * 3 + 300, y: 430, image: platformImage
+    }), new Platfrom({
+        x: platformImage.width * 4 + 550, y: 430, image: platformImage
+    }), new Platfrom({
+        x: platformImage.width * 5 + 550 -3, y: 430, image: platformImage
+    }), new Platfrom({
+        x: platformImage.width * 5 + 400, y: 300, image: platformSmall
+    }), new Platfrom({
+        x: platformImage.width * 5 + 600, y: 200, image: platformSmall
+    }), new Platfrom({
+        x: platformImage.width * 5 + 200, y: 100, image: platformSmall
+    }), new Platfrom({
+        x: platformImage.width * 6 + 600, y: 330, image: platformSmall
+    }) //här slutar trappan 
+    , new Platfrom({
+        x: platformImage.width * 6 + 930 + platformSmallTall.width * 4 - 20, y: 330, image: platformSmallTall
+    }), new Platfrom({
+        x: platformImage.width * 6 + 930 + platformSmallTall.width * 3 - 20, y: 230, image: platformSmallTall
+    }), new Platfrom({
+        x: platformImage.width * 6 + 930 + platformSmallTall.width * 2 - 20, y: 230, image: platformSmallTall
+    }), new Platfrom({
+        x: platformImage.width * 6 + 930 + platformSmallTall.width * 2 - 20, y: 130, image: platformSmallTall
+    }), new Platfrom({
+        x: platformImage.width * 6 + 930 + platformSmallTall.width - 20, y: 230, image: platformSmallTall
+    }), new Platfrom({
+        x: platformImage.width * 6 + 930, y: 330, image: platformSmallTall
+    }) // här börjar trappan
+    , new Platfrom({
+        x: platformImage.width * 6 + 900, y: 430, image: platformImage
+    }), new Platfrom({
+        x: platformImage.width * 7 + 900 -3, y: 430, image: platformImage
+    }), new Platfrom({
+        x: platformImage.width * 8 + 900 -5, y: 430, image: platformImage
     })
     ];
     genericObjects = [
@@ -117,7 +175,11 @@ function init() {
             image: hillsImage
         })
 
-    ]
+    ];
+    monster = new Monster({
+        x: platformImage.width * 6 + 930 + platformSmallTall.width * 2 + 65 - 20, y: 360,
+        image: monsterImage
+    });
 
     scrollOffset = 0; 
 }
@@ -125,6 +187,7 @@ function init() {
 let player = "";
 let platforms = [];
 let genericObjects = [];
+let monster = "";
 
 const keys = {
     right: {
@@ -140,14 +203,17 @@ function animate() {
     requestAnimationFrame(animate);
     c.fillStyle ='white'
     c.fillRect(0, 0, canvas.width, canvas.height);
+   
     genericObjects.forEach(platform => {
         platform.draw();
     })
     platforms.forEach(platform => {
         platform.draw();
     })
+    monster.draw();
     player.update();
     
+    console.log(scrollOffset);
     // Här blir höger eller vänster tryck bearbeteade
     if(keys.right.pressed 
         && player.position.x < 400) {
@@ -168,6 +234,7 @@ function animate() {
             genericObjects.forEach(genericObject => {
                 genericObject.position.x -= player.speed * .66;
             })
+            monster.position.x -= player.speed;
         } else if (keys.left.pressed && scrollOffset > 0) {
             scrollOffset -= 5;
             player.image = playerSpegelImage;
@@ -177,6 +244,7 @@ function animate() {
             genericObjects.forEach(genericObject => {
                 genericObject.position.x += player.speed * .66;
             })
+            monster.position.x += player.speed;
         }
     }
 
@@ -190,16 +258,24 @@ function animate() {
         }
     })
 
+    // Starta om spelet när hon går på bilen.
+    if(player.position.x < monster.position.x + monster.width &&
+        player.position.x + player.width > monster.position.x &&
+        player.position.y < monster.position.y + monster.height &&
+        player.position.y + player.height > monster.position.y
+      ) {
+        alert("You lose!")
+        init()
+    }
+
     // win condition
-    if(scrollOffset > 2000) {
+    if(scrollOffset > 20000) {
         console.log("YOU WIN")
-        alert("YOU WIN!")
     }
 
     //Lose condition
     if(player.position.y > canvas.height) {
         init()
-        alert("You lose!")
     }
 }
 init();
