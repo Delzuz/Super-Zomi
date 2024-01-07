@@ -4,6 +4,9 @@ const platformImgSrc = './img/platform.png';
 const backgroundImgSrc = './img/background.png'
 const hillsImgSrc = './img/hills.png'
 const playerImgSrc = './img/zomi7.png'
+const playerspegelImgSrc = './img/zomispegel.png'
+const playerSitImgSrc = './img/zomisit1.png'
+const playerSitSpegelImgSrc = './img/zomisit1Spegel.png'
 const gravity = 1.5;
 
 canvas.width = 1024;
@@ -15,11 +18,13 @@ function createImage(imgSrc) {
     image.src = imgSrc;
     return image;
 }
-
+const playerNormalImage = createImage(playerImgSrc);
+const playerSpegelImage = createImage(playerspegelImgSrc);
+const playerSitImage = createImage(playerSitImgSrc);
+const playerSitSpegelImage = createImage(playerSitSpegelImgSrc);
 const platformImage = createImage(platformImgSrc);
 const backgroundImage = createImage(backgroundImgSrc);
 const hillsImage = createImage(hillsImgSrc);
-const playerImage = createImage(playerImgSrc);
 
 class Player {
     constructor(image) {
@@ -91,7 +96,7 @@ class GenericObject {
 }
 
 function init() {
-    player = new Player(playerImage);
+    player = new Player(playerSitImage);
     platforms = [new Platfrom({
         x: -1, y: 430, image: platformImage
     }), new Platfrom({
@@ -147,13 +152,16 @@ function animate() {
     if(keys.right.pressed 
         && player.position.x < 400) {
         player.velocity.x = player.speed;
+        player.image = playerNormalImage;
     } else if ((keys.left.pressed
         && player.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && player.position.x > 0)) {
-        player.velocity.x = -player.speed    
+        player.velocity.x = -player.speed
+        player.image = playerSpegelImage;
     } else {
         player.velocity.x = 0;
         if(keys.right.pressed) {
             scrollOffset += 5;
+            player.image = playerNormalImage;
             platforms.forEach(platform => {
                 platform.position.x -= player.speed;
             })
@@ -162,6 +170,7 @@ function animate() {
             })
         } else if (keys.left.pressed && scrollOffset > 0) {
             scrollOffset -= 5;
+            player.image = playerSpegelImage;
             platforms.forEach(platform => {
                 platform.position.x += player.speed;
             })
@@ -197,15 +206,15 @@ init();
 animate();
 addEventListener('keydown', ({keyCode}) => {
     switch(keyCode) {
-        case 37: keys.left.pressed = true; console.log(keys.left.pressed); break;//Left key
+        case 37: keys.left.pressed = true; break;//Left key
         case 38: player.velocity.y -= 20; break;//Up key
-        case 39: keys.right.pressed = true; console.log(keys.right.pressed); break;//Right key
+        case 39: keys.right.pressed = true; break;//Right key
     }
 })
 addEventListener('keyup', ({keyCode}) => {
     switch(keyCode) {
-        case 37: keys.left.pressed = false; console.log(keys.left.pressed); break;//Left key
+        case 37: keys.left.pressed = false; player.image = playerSitSpegelImage; console.log(keys.left.pressed); break;//Left key
         case 38: player.velocity.y = 0; break;//Up key
-        case 39: keys.right.pressed = false; console.log(keys.right.pressed); break;//Right key
+        case 39: keys.right.pressed = false; player.image = playerSitImage; console.log(keys.right.pressed); break;//Right key
     }
 })
