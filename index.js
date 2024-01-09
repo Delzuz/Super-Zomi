@@ -70,7 +70,7 @@ class Player {
 }
 
 class Platfrom {
-    constructor({x, y, image}) {
+    constructor({x, y, image, walkable}) {
         this.position = {
             x,
             y
@@ -78,6 +78,7 @@ class Platfrom {
         this.image = image
         this.width = image.width
         this.height = image.height
+        this.walkable = walkable
     }
 
     draw() {
@@ -120,47 +121,49 @@ class Monster {
 function init() {
     player = new Player(playerSitImage);
     platforms = [ new Platfrom({
-        x: platformImage.width * 4 + 9, y: 300, image: platformSmallTall
+        x: platformImage.width * 4 + 9, y: 300, image: platformSmallTall, walkable: true
     }), new Platfrom({
-        x: -1, y: 430, image: platformImage
+        x: -1, y: 430, image: platformImage, walkable: true
     }), new Platfrom({
-        x: platformImage.width -3, y: 430, image: platformImage
+        x: platformImage.width -3, y: 430, image: platformImage, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 2 + 100, y: 430, image: platformImage
+        x: platformImage.width * 2 + 100, y: 430, image: platformImage, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 3 + 300, y: 430, image: platformImage
+        x: platformImage.width * 3 + 300, y: 430, image: platformImage, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 4 + 550, y: 430, image: platformImage
+        x: platformImage.width * 4 + 550, y: 430, image: platformImage, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 5 + 550 -3, y: 430, image: platformImage
+        x: platformImage.width * 5 + 550 -3, y: 430, image: platformImage, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 5 + 400, y: 300, image: platformSmall
+        x: platformImage.width * 5 + 400, y: 300, image: platformSmall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 5 + 600, y: 200, image: platformSmall
+        x: platformImage.width * 5 + 600, y: 200, image: platformSmall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 5 + 200, y: 100, image: platformSmall
+        x: platformImage.width * 5 + 200, y: 100, image: platformSmall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 6 + 600, y: 330, image: platformSmall
+        x: platformImage.width * 6 + 600, y: 330, image: platformSmall, walkable: true
     }) //här slutar trappan 
     , new Platfrom({
-        x: platformImage.width * 6 + 930 + platformSmallTall.width * 4 - 20, y: 330, image: platformSmallTall
+        x: platformImage.width * 6 + 930 + platformSmallTall.width * 4 - 25, y: 330, image: platformSmallTall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 6 + 930 + platformSmallTall.width * 3 - 20, y: 230, image: platformSmallTall
+        x: platformImage.width * 6 + 930 + platformSmallTall.width * 3 - 20, y: 230, image: platformSmallTall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 6 + 930 + platformSmallTall.width * 2 - 20, y: 230, image: platformSmallTall
+        x: platformImage.width * 6 + 930 + platformSmallTall.width * 2 - 10, y: 230, image: platformSmallTall, walkable: false
     }), new Platfrom({
-        x: platformImage.width * 6 + 930 + platformSmallTall.width * 2 - 20, y: 130, image: platformSmallTall
+        x: platformImage.width * 6 + 930 + platformSmallTall.width * 2 - 10, y: 130, image: platformSmallTall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 6 + 930 + platformSmallTall.width - 20, y: 230, image: platformSmallTall
+        x: platformImage.width * 6 + 930 + platformSmallTall.width - 5, y: 230, image: platformSmallTall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 6 + 930, y: 330, image: platformSmallTall
+        x: platformImage.width * 6 + 930, y: 330, image: platformSmallTall, walkable: true
     }) // här börjar trappan
     , new Platfrom({
-        x: platformImage.width * 6 + 900, y: 430, image: platformImage
+        x: platformImage.width * 6 + 900, y: 430, image: platformImage, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 7 + 900 -3, y: 430, image: platformImage
+        x: platformImage.width * 7 + 900 -3, y: 430, image: platformImage, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 8 + 900 -5, y: 430, image: platformImage
+        x: platformImage.width * 8 + 900 -5, y: 430, image: platformImage, walkable: true
+    }), new Platfrom({
+        x: platformImage.width * 9 + 900 -10, y: 430, image: platformImage, walkable: true
     })
     ];
     genericObjects = [
@@ -253,16 +256,17 @@ function animate() {
         if(player.position.y + player.height <= platform.position.y
             && player.position.y + player.height + player.velocity.y >= platform.position.y
             && player.position.x + player.width >= platform.position.x 
-            && player.position.x <= platform.position.x + platform.width) {
+            && player.position.x <= platform.position.x + platform.width
+            && platform.walkable == true) {
             player.velocity.y = 0;
         }
     })
 
     // Starta om spelet när hon går på bilen.
-    if(player.position.x < monster.position.x + monster.width &&
-        player.position.x + player.width > monster.position.x &&
-        player.position.y < monster.position.y + monster.height &&
-        player.position.y + player.height > monster.position.y
+    if(player.position.x < monster.position.x + monster.width - 20 &&
+        player.position.x + player.width - 20 > monster.position.x &&
+        player.position.y  < monster.position.y + monster.height &&
+        player.position.y + player.height - 20 > monster.position.y
       ) {
         alert("You lose!")
         init()
