@@ -10,6 +10,7 @@ const playerSitSpegelImgSrc = './img/zomisit1Spegel.png'
 const platfromSmallTallImgSrc = './img/platformSmallTall.png'
 const platfromSmallImgSrc = './img/platformSmall.png'
 const monsterImgSrc = './img/monster.png'
+const iceSpikeImgSrc = './img/istapp.png'
 const gravity = 1.5;
 
 canvas.width = 1024;
@@ -31,6 +32,7 @@ const hillsImage = createImage(hillsImgSrc);
 const platformSmallTall = createImage(platfromSmallTallImgSrc);
 const platformSmall = createImage(platfromSmallImgSrc);
 const monsterImage = createImage(monsterImgSrc);
+const iceSpikeImage = createImage(iceSpikeImgSrc);
 
 class Player {
     constructor(image) {
@@ -179,6 +181,55 @@ function init() {
         })
 
     ];
+
+    iceSpikes = [
+        new GenericObject({
+            x: platformImage.width * 2 - 50,
+            y: 430,
+            image: iceSpikeImage
+        }),
+        new GenericObject({
+            x: platformImage.width * 3 + 50,
+            y: 430,
+            image: iceSpikeImage
+        }),
+        new GenericObject({
+            x: platformImage.width * 3 + 150,
+            y: 430,
+            image: iceSpikeImage
+        }),
+        new GenericObject({
+            x: platformImage.width * 4 + 250,
+            y: 430,
+            image: iceSpikeImage
+        }),
+        new GenericObject({
+            x: platformImage.width * 4 + 350,
+            y: 430,
+            image: iceSpikeImage
+        }),
+        new GenericObject({
+            x: platformImage.width * 4 + 400,
+            y: 430,
+            image: iceSpikeImage
+        }),
+        new GenericObject({
+            x: platformImage.width * 6 + 500,
+            y: 430,
+            image: iceSpikeImage
+        }),
+        new GenericObject({
+            x: platformImage.width * 6 + 620,
+            y: 430,
+            image: iceSpikeImage
+        }),
+        new GenericObject({
+            x: platformImage.width * 6 + 720,
+            y: 430,
+            image: iceSpikeImage
+        })
+    ]
+
     monster = new Monster({
         x: platformImage.width * 6 + 930 + platformSmallTall.width * 2 + 65 - 20, y: 360,
         image: monsterImage
@@ -190,6 +241,7 @@ function init() {
 let player = "";
 let platforms = [];
 let genericObjects = [];
+let iceSpikes = [];
 let monster = "";
 
 const keys = {
@@ -209,6 +261,9 @@ function animate() {
    
     genericObjects.forEach(platform => {
         platform.draw();
+    })
+    iceSpikes.forEach(spike => {
+        spike.draw();
     })
     platforms.forEach(platform => {
         platform.draw();
@@ -237,6 +292,9 @@ function animate() {
             genericObjects.forEach(genericObject => {
                 genericObject.position.x -= player.speed * .66;
             })
+            iceSpikes.forEach(spiket => {
+                spiket.position.x -= player.speed;
+            })
             monster.position.x -= player.speed;
         } else if (keys.left.pressed && scrollOffset > 0) {
             scrollOffset -= 5;
@@ -246,6 +304,9 @@ function animate() {
             })
             genericObjects.forEach(genericObject => {
                 genericObject.position.x += player.speed * .66;
+            })
+            iceSpikes.forEach(spiket => {
+                spiket.position.x += player.speed;
             })
             monster.position.x += player.speed;
         }
