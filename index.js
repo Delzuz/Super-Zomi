@@ -11,6 +11,7 @@ const platfromSmallTallImgSrc = './img/platformSmallTall.png'
 const platfromSmallImgSrc = './img/platformSmall.png'
 const monsterImgSrc = './img/monster.png'
 const iceSpikeImgSrc = './img/istapp.png'
+const iceSpikesLongImgSrc = './img/spritesheet.png'
 const gravity = 1.5;
 
 canvas.width = 1024;
@@ -33,6 +34,7 @@ const platformSmallTall = createImage(platfromSmallTallImgSrc);
 const platformSmall = createImage(platfromSmallImgSrc);
 const monsterImage = createImage(monsterImgSrc);
 const iceSpikeImage = createImage(iceSpikeImgSrc);
+const iceSpikesLongImage = createImage(iceSpikesLongImgSrc);
 
 class Player {
     constructor(image) {
@@ -46,8 +48,6 @@ class Player {
             x: 0,
             y: 1
         }
-        // this.width = 30;
-        // this.height = 30;
         this.image = image
         this.width = image.width
         this.height = image.height
@@ -55,9 +55,6 @@ class Player {
 
     draw() {
         c.drawImage(this.image, this.position.x, this.position.y)
-
-        // c.fillStyle = 'red';
-        // c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 
     update() {
@@ -166,6 +163,16 @@ function init() {
         x: platformImage.width * 8 + 900 -5, y: 430, image: platformImage, walkable: true
     }), new Platfrom({
         x: platformImage.width * 9 + 900 -10, y: 430, image: platformImage, walkable: true
+    }), new Platfrom({
+        x: platformImage.width * 10 + 1050, y: 330, image: platformSmall, walkable: true
+    }), new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width + 1200 , y: 200, image: platformSmall, walkable: true
+    }), new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 2 + 1350 , y: 70, image: platformSmall, walkable: true
+    }), new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 3 + 1700 , y: 400, image: platformSmall, walkable: true
+    }), new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 4 + 1950 , y: 430, image: platformImage, walkable: true
     })
     ];
     genericObjects = [
@@ -227,6 +234,21 @@ function init() {
             x: platformImage.width * 6 + 720,
             y: 430,
             image: iceSpikeImage
+        }),
+        new GenericObject({
+            x: platformImage.width * 9 + platformSmall.width + 1200 ,
+            y: 430,
+            image: iceSpikesLongImage
+        }),
+        new GenericObject({
+            x: platformImage.width * 10 + platformSmall.width + 1200,
+            y: 430,
+            image: iceSpikesLongImage
+        }),
+        new GenericObject({
+            x: platformImage.width * 10 + platformSmall.width + 1700,
+            y: 430,
+            image: iceSpikesLongImage
         })
     ]
 
