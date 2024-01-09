@@ -173,6 +173,10 @@ function init() {
         x: platformImage.width * 10 + platformSmall.width * 3 + 1700 , y: 400, image: platformSmall, walkable: true
     }), new Platfrom({
         x: platformImage.width * 10 + platformSmall.width * 4 + 1950 , y: 430, image: platformImage, walkable: true
+    }), new Platfrom({
+        x: platformImage.width * 11 + platformSmall.width * 4 + 1950 -4  , y: 430, image: platformImage, walkable: true
+    }), new Platfrom({
+        x: platformImage.width * 12 + platformSmall.width * 4 + 1950 -6  , y: 430, image: platformImage, walkable: true
     })
     ];
     genericObjects = [
@@ -349,7 +353,7 @@ function animate() {
     if(player.position.x < monster.position.x + monster.width - 20 &&
         player.position.x + player.width - 20 > monster.position.x &&
         player.position.y  < monster.position.y + monster.height &&
-        player.position.y + player.height - 20 > monster.position.y
+        player.position.y + player.height - 40 > monster.position.y
       ) {
         alert("You lose!")
         init()
