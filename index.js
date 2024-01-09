@@ -16,9 +16,9 @@ const gravity = 1.5;
 
 canvas.width = 1024;
 canvas.height = 524;
+console.log("test")
 
-
-function createImage(imgSrc) {
+function createImage(imgSrc) {s
     const image = new Image();
     image.src = imgSrc;
     return image;
