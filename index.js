@@ -1,14 +1,14 @@
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext("2d");
-const platformImgSrc = './img/platform.png';
+const platformImgSrc = './img/platformgreen.png';
 const backgroundImgSrc = './img/background.png'
 const hillsImgSrc = './img/hills.png'
 const playerImgSrc = './img/zomi7.png'
 const playerspegelImgSrc = './img/zomispegel.png'
 const playerSitImgSrc = './img/zomisit1.png'
 const playerSitSpegelImgSrc = './img/zomisit1Spegel.png'
-const platfromSmallTallImgSrc = './img/platformSmallTall.png'
-const platfromSmallImgSrc = './img/platformSmall.png'
+const platfromSmallTallImgSrc = './img/platformSmallTallgreen.png'
+const platfromSmallImgSrc = './img/platformSmallGreen.png'
 const monsterImgSrc = './img/monster.png'
 const iceSpikeImgSrc = './img/istapp.png'
 const iceSpikesLongImgSrc = './img/spritesheet.png'
@@ -18,7 +18,7 @@ canvas.width = 1024;
 canvas.height = 524;
 console.log("test")
 
-function createImage(imgSrc) {s
+function createImage(imgSrc) {
     const image = new Image();
     image.src = imgSrc;
     return image;
