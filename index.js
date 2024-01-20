@@ -143,17 +143,17 @@ function init() {
         x: platformImage.width * 6 + 600, y: 330, image: platformSmall, walkable: true
     }) //här slutar trappan 
     , new Platfrom({
-        x: platformImage.width * 6 + 930 + platformSmallTall.width * 4 - 25, y: 330, image: platformSmallTall, walkable: true
+        x: platformImage.width * 6 + 1200 + platformSmallTall.width * 4 - 25, y: 330, image: platformSmallTall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 6 + 930 + platformSmallTall.width * 3 - 20, y: 230, image: platformSmallTall, walkable: true
+        x: platformImage.width * 6 + 1200 + platformSmallTall.width * 3 - 20, y: 230, image: platformSmallTall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 6 + 930 + platformSmallTall.width * 2 - 10, y: 230, image: platformSmallTall, walkable: false
+        x: platformImage.width * 6 + 1200 + platformSmallTall.width * 2 - 10, y: 230, image: platformSmallTall, walkable: false
     }), new Platfrom({
-        x: platformImage.width * 6 + 930 + platformSmallTall.width * 2 - 10, y: 130, image: platformSmallTall, walkable: true
+        x: platformImage.width * 6 + 1200 + platformSmallTall.width * 2 - 10, y: 130, image: platformSmallTall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 6 + 930 + platformSmallTall.width - 5, y: 230, image: platformSmallTall, walkable: true
+        x: platformImage.width * 6 + 1200 + platformSmallTall.width - 5, y: 230, image: platformSmallTall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 6 + 930, y: 330, image: platformSmallTall, walkable: true
+        x: platformImage.width * 6 + 1200, y: 330, image: platformSmallTall, walkable: true
     }) // här börjar trappan
     , new Platfrom({
         x: platformImage.width * 6 + 900, y: 430, image: platformImage, walkable: true
@@ -166,17 +166,31 @@ function init() {
     }), new Platfrom({
         x: platformImage.width * 10 + 1050, y: 330, image: platformSmall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 10 + platformSmall.width + 1200 , y: 200, image: platformSmall, walkable: true
+        x: platformImage.width * 10 + platformSmall.width + 1200 , y: 220, image: platformSmall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 10 + platformSmall.width * 2 + 1350 , y: 70, image: platformSmall, walkable: true
+        x: platformImage.width * 10 + platformSmall.width * 2 + 1350 , y: 100, image: platformSmall, walkable: true
     }), new Platfrom({
         x: platformImage.width * 10 + platformSmall.width * 3 + 1700 , y: 400, image: platformSmall, walkable: true
+    }), // Början av slut-trappan upp till korgen 
+    new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6  , y: 330, image: platformSmallTall, walkable: true
+    }),new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width , y: 230, image: platformSmallTall, walkable: true
+    }),new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 2, y: 230, image: platformSmallTall, walkable: false
+    }),new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 2, y: 130, image: platformSmallTall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 10 + platformSmall.width * 4 + 1950 , y: 430, image: platformImage, walkable: true
+        x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 3, y: 230, image: platformSmallTall, walkable: false
+    }),new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 3, y: 130, image: platformSmallTall, walkable: true
+    }), // Slutet av slut-trappan
+    new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 4 + 1900 , y: 430, image: platformImage, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 11 + platformSmall.width * 4 + 1950 -4  , y: 430, image: platformImage, walkable: true
+        x: platformImage.width * 11 + platformSmall.width * 4 + 1900 -4  , y: 430, image: platformImage, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 12 + platformSmall.width * 4 + 1950 -6  , y: 430, image: platformImage, walkable: true
+        x: platformImage.width * 12 + platformSmall.width * 4 + 1900 -6  , y: 430, image: platformImage, walkable: true
     })
     ];
     genericObjects = [
@@ -257,7 +271,7 @@ function init() {
     ]
 
     monster = new Monster({
-        x: platformImage.width * 6 + 930 + platformSmallTall.width * 2 + 65 - 20, y: 360,
+        x: platformImage.width * 6 + 1200 + platformSmallTall.width * 2 + 65 - 20, y: 360,
         image: monsterImage
     });
 
