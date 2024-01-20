@@ -10,8 +10,9 @@ const playerSitSpegelImgSrc = './img/zomisit1Spegel.png'
 const platfromSmallTallImgSrc = './img/platformSmallTallgreen.png'
 const platfromSmallImgSrc = './img/platformSmallGreen.png'
 const monsterImgSrc = './img/monster.png'
-const iceSpikeImgSrc = './img/istapp.png'
-const iceSpikesLongImgSrc = './img/spritesheet.png'
+const iceSpikeImgSrc = './img/lava.jpg'
+const iceSpikesLongImgSrc = './img/lavaLong.png'
+const korgImgSrc = './img/korg.png'
 const gravity = 1.5;
 
 canvas.width = 1024;
@@ -35,6 +36,7 @@ const platformSmall = createImage(platfromSmallImgSrc);
 const monsterImage = createImage(monsterImgSrc);
 const iceSpikeImage = createImage(iceSpikeImgSrc);
 const iceSpikesLongImage = createImage(iceSpikesLongImgSrc);
+const korgImage = createImage(korgImgSrc);
 
 class Player {
     constructor(image) {
@@ -170,7 +172,7 @@ function init() {
     }), new Platfrom({
         x: platformImage.width * 10 + platformSmall.width * 2 + 1350 , y: 100, image: platformSmall, walkable: true
     }), new Platfrom({
-        x: platformImage.width * 10 + platformSmall.width * 3 + 1700 , y: 400, image: platformSmall, walkable: true
+        x: platformImage.width * 10 + platformSmall.width * 3 + 1700 , y: 390, image: platformSmall, walkable: true
     }), // Början av slut-trappan upp till korgen 
     new Platfrom({
         x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6  , y: 330, image: platformSmallTall, walkable: true
@@ -184,6 +186,14 @@ function init() {
         x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 3, y: 230, image: platformSmallTall, walkable: false
     }),new Platfrom({
         x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 3, y: 130, image: platformSmallTall, walkable: true
+    }), new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 4, y: 230, image: platformSmallTall, walkable: false
+    }),new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 4, y: 130, image: platformSmallTall, walkable: true
+    }), new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 5, y: 230, image: platformSmallTall, walkable: false
+    }),new Platfrom({
+        x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 5, y: 130, image: platformSmallTall, walkable: true
     }), // Slutet av slut-trappan
     new Platfrom({
         x: platformImage.width * 10 + platformSmall.width * 4 + 1900 , y: 430, image: platformImage, walkable: true
@@ -191,6 +201,8 @@ function init() {
         x: platformImage.width * 11 + platformSmall.width * 4 + 1900 -4  , y: 430, image: platformImage, walkable: true
     }), new Platfrom({
         x: platformImage.width * 12 + platformSmall.width * 4 + 1900 -6  , y: 430, image: platformImage, walkable: true
+    }), new Platfrom({
+        x: platformImage.width * 13 + platformSmall.width * 4 + 1900 -6  , y: 430, image: platformImage, walkable: true
     })
     ];
     genericObjects = [
@@ -210,62 +222,62 @@ function init() {
     iceSpikes = [
         new GenericObject({
             x: platformImage.width * 2 - 50,
-            y: 430,
+            y: 450,
             image: iceSpikeImage
         }),
         new GenericObject({
             x: platformImage.width * 3 + 50,
-            y: 430,
+            y: 450,
             image: iceSpikeImage
         }),
         new GenericObject({
             x: platformImage.width * 3 + 150,
-            y: 430,
+            y: 450,
             image: iceSpikeImage
         }),
         new GenericObject({
             x: platformImage.width * 4 + 250,
-            y: 430,
+            y: 450,
             image: iceSpikeImage
         }),
         new GenericObject({
             x: platformImage.width * 4 + 350,
-            y: 430,
+            y: 450,
             image: iceSpikeImage
         }),
         new GenericObject({
             x: platformImage.width * 4 + 400,
-            y: 430,
+            y: 450,
             image: iceSpikeImage
         }),
         new GenericObject({
             x: platformImage.width * 6 + 500,
-            y: 430,
+            y: 450,
             image: iceSpikeImage
         }),
         new GenericObject({
             x: platformImage.width * 6 + 620,
-            y: 430,
+            y: 450,
             image: iceSpikeImage
         }),
         new GenericObject({
             x: platformImage.width * 6 + 720,
-            y: 430,
+            y: 450,
             image: iceSpikeImage
         }),
         new GenericObject({
             x: platformImage.width * 9 + platformSmall.width + 1200 ,
-            y: 430,
+            y: 450,
             image: iceSpikesLongImage
         }),
         new GenericObject({
             x: platformImage.width * 10 + platformSmall.width + 1200,
-            y: 430,
+            y: 450,
             image: iceSpikesLongImage
         }),
         new GenericObject({
             x: platformImage.width * 10 + platformSmall.width + 1700,
-            y: 430,
+            y: 450,
             image: iceSpikesLongImage
         })
     ]
@@ -275,6 +287,7 @@ function init() {
         image: monsterImage
     });
 
+    korg = new GenericObject({x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 3, y: 70, image: korgImage})
     scrollOffset = 0; 
 }
 
@@ -283,6 +296,7 @@ let platforms = [];
 let genericObjects = [];
 let iceSpikes = [];
 let monster = "";
+let korg = "";
 
 const keys = {
     right: {
@@ -309,9 +323,12 @@ function animate() {
         platform.draw();
     })
     monster.draw();
+    korg.draw();
     player.update();
     
-    console.log(scrollOffset);
+    console.log(player.position.x);
+    console.log("test");
+    console.log(player.position.y);
     // Här blir höger eller vänster tryck bearbeteade
     if(keys.right.pressed 
         && player.position.x < 400) {
@@ -336,6 +353,7 @@ function animate() {
                 spiket.position.x -= player.speed;
             })
             monster.position.x -= player.speed;
+            korg.position.x -= player.speed;
         } else if (keys.left.pressed && scrollOffset > 0) {
             scrollOffset -= 5;
             player.image = playerSpegelImage;
@@ -349,6 +367,7 @@ function animate() {
                 spiket.position.x += player.speed;
             })
             monster.position.x += player.speed;
+            korg.position.x += player.speed;
         }
     }
 
@@ -374,8 +393,15 @@ function animate() {
     }
 
     // win condition
-    if(scrollOffset > 20000) {
+    if(player.position.x < korg.position.x + korg.width - 20 &&
+        player.position.x + player.width - 20 > korg.position.x &&
+        player.position.y  < korg.position.y + korg.height &&
+        player.position.y + player.height - 40 > korg.position.y
+      ) {
         console.log("YOU WIN")
+        setTimeout(function() {
+            window.location.href = 'win.html';
+        }, 3000);
     }
 
     //Lose condition
