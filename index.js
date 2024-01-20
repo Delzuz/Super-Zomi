@@ -13,6 +13,7 @@ const monsterImgSrc = './img/monster.png'
 const iceSpikeImgSrc = './img/lava.jpg'
 const iceSpikesLongImgSrc = './img/lavaLong.png'
 const korgImgSrc = './img/korg.png'
+const bunnyImgSrc = './img/bunny.png'
 const gravity = 1.5;
 
 canvas.width = 1024;
@@ -37,6 +38,7 @@ const monsterImage = createImage(monsterImgSrc);
 const iceSpikeImage = createImage(iceSpikeImgSrc);
 const iceSpikesLongImage = createImage(iceSpikesLongImgSrc);
 const korgImage = createImage(korgImgSrc);
+const bunnyImage = createImage(bunnyImgSrc);
 
 class Player {
     constructor(image) {
@@ -100,6 +102,26 @@ class GenericObject {
 
     draw() {
         c.drawImage(this.image, this.position.x, this.position.y)
+    }
+}
+
+class Bunny {
+    constructor({x, y, image, visable, taken}) {
+        this.position = {
+            x,
+            y
+        }
+        this.image = image
+        this.width = image.width
+        this.height = image.height
+        this.visable = visable
+        this.taken = taken
+    }
+
+    draw(seen) {
+        if(seen) {
+            c.drawImage(this.image, this.position.x, this.position.y);
+        }
     }
 }
 
@@ -261,7 +283,7 @@ function init() {
             image: iceSpikeImage
         }),
         new GenericObject({
-            x: platformImage.width * 6 + 720,
+            x: platformImage.width * 6 + 730,
             y: 450,
             image: iceSpikeImage
         }),
@@ -281,7 +303,33 @@ function init() {
             image: iceSpikesLongImage
         })
     ]
-
+    bunnies = [
+        new Bunny({
+            x:600, y:380, image: bunnyImage, visable:true, taken: false
+        }),new Bunny({
+            x:1500, y:280, image: bunnyImage, visable:true, taken: false
+        }),new Bunny({
+            x:1550, y:280, image: bunnyImage, visable:true, taken: false
+        }),new Bunny({
+            x:1850, y:280, image: bunnyImage, visable:true, taken: false
+        }),new Bunny({
+            x:1900, y:280, image: bunnyImage, visable:true, taken: false
+        }),new Bunny({
+            x:2200, y:280, image: bunnyImage, visable:true, taken: false
+        }),new Bunny({
+            x:2550, y:220, image: bunnyImage, visable:true, taken: false
+        }),new Bunny({
+            x:2750, y:180, image: bunnyImage, visable:true, taken: false
+        }),new Bunny({
+            x:3000, y:380, image: bunnyImage, visable:true, taken: false
+        }),new Bunny({
+            x:3380, y:250, image: bunnyImage, visable:true, taken: false
+        }),new Bunny({
+            x:3600, y:150, image: bunnyImage, visable:true, taken: false
+        }),new Bunny({
+            x:3100, y:50, image: bunnyImage, visable:true, taken: false
+        }),
+    ]
     monster = new Monster({
         x: platformImage.width * 6 + 1200 + platformSmallTall.width * 2 + 65 - 20, y: 360,
         image: monsterImage
@@ -289,6 +337,7 @@ function init() {
 
     korg = new GenericObject({x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6 + platformSmallTall.width * 3, y: 70, image: korgImage})
     scrollOffset = 0; 
+    score = 0;
 }
 
 let player = "";
@@ -297,6 +346,7 @@ let genericObjects = [];
 let iceSpikes = [];
 let monster = "";
 let korg = "";
+let bunnies = [];
 
 const keys = {
     right: {
@@ -307,12 +357,19 @@ const keys = {
     }
 }
 let scrollOffset = 0; 
+let score = 0;
+
+function renderScore() {
+    c.fillStyle = "white";
+    c.font = "20px Arial";
+    c.fillText("Score: " + score, 10, 30);
+}
 
 function animate() {
     requestAnimationFrame(animate);
     c.fillStyle ='white'
     c.fillRect(0, 0, canvas.width, canvas.height);
-   
+    
     genericObjects.forEach(platform => {
         platform.draw();
     })
@@ -323,12 +380,16 @@ function animate() {
         platform.draw();
     })
     monster.draw();
+    bunnies.forEach(bunny => {
+        bunny.draw(bunny.visable);
+    })
     korg.draw();
     player.update();
-    
-    console.log(player.position.x);
-    console.log("test");
-    console.log(player.position.y);
+    renderScore();
+    console.log(score);
+    // console.log(player.position.x);
+    // console.log("test");
+    // console.log(player.position.y);
     // Här blir höger eller vänster tryck bearbeteade
     if(keys.right.pressed 
         && player.position.x < 400) {
@@ -353,6 +414,9 @@ function animate() {
                 spiket.position.x -= player.speed;
             })
             monster.position.x -= player.speed;
+            bunnies.forEach(bunny => {
+                bunny.position.x -= player.speed;
+            })
             korg.position.x -= player.speed;
         } else if (keys.left.pressed && scrollOffset > 0) {
             scrollOffset -= 5;
@@ -367,6 +431,9 @@ function animate() {
                 spiket.position.x += player.speed;
             })
             monster.position.x += player.speed;
+            bunnies.forEach(bunny => {
+                bunny.position.x += player.speed;
+            })
             korg.position.x += player.speed;
         }
     }
@@ -381,6 +448,20 @@ function animate() {
             player.velocity.y = 0;
         }
     })
+
+    bunnies.forEach(bunny => {
+        if(!bunny.taken &&
+            player.position.x < bunny.position.x + bunny.width - 20 &&
+            player.position.x + player.width - 20 > bunny.position.x &&
+            player.position.y  < bunny.position.y + bunny.height &&
+            player.position.y + player.height - 40 > bunny.position.y
+          ) {
+            bunny.taken = true;
+            bunny.visable = false;
+            score +=1;
+        }
+    })
+    
 
     // Starta om spelet när hon går på bilen.
     if(player.position.x < monster.position.x + monster.width - 20 &&
@@ -401,7 +482,7 @@ function animate() {
         console.log("YOU WIN")
         setTimeout(function() {
             window.location.href = 'win.html';
-        }, 3000);
+        }, 1000);
     }
 
     //Lose condition
