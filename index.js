@@ -10,8 +10,8 @@ const playerSitSpegelImgSrc = './img/zomisit1Spegel.png'
 const platfromSmallTallImgSrc = './img/platformSmallTallgreen.png'
 const platfromSmallImgSrc = './img/platformSmallGreen.png'
 const monsterImgSrc = './img/monster.png'
-const iceSpikeImgSrc = './img/lava.jpg'
-const iceSpikesLongImgSrc = './img/lavaLong.png'
+const iceSpikeImgSrc = './img/water.png'
+const iceSpikesLongImgSrc = './img/waterLong.png'
 const korgImgSrc = './img/korg.png'
 const bunnyImgSrc = './img/bunny.png'
 const gravity = 1.5;
@@ -42,7 +42,7 @@ const bunnyImage = createImage(bunnyImgSrc);
 
 class Player {
     constructor(image) {
-        this.speed = 8;
+        this.speed = 7;
         this.position ={
             x: 100,
             y: 100,
@@ -193,9 +193,10 @@ function init() {
         x: platformImage.width * 10 + platformSmall.width + 1200 , y: 220, image: platformSmall, walkable: true
     }), new Platfrom({
         x: platformImage.width * 10 + platformSmall.width * 2 + 1350 , y: 100, image: platformSmall, walkable: true
-    }), new Platfrom({
-        x: platformImage.width * 10 + platformSmall.width * 3 + 1700 , y: 390, image: platformSmall, walkable: true
-    }), // Början av slut-trappan upp till korgen 
+    }), //new Platfrom({
+       // x: platformImage.width * 10 + platformSmall.width * 3 + 1700 , y: 390, image: platformSmall, walkable: true
+    //})
+    , // Början av slut-trappan upp till korgen 
     new Platfrom({
         x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6  , y: 330, image: platformSmallTall, walkable: true
     }),new Platfrom({
@@ -227,6 +228,17 @@ function init() {
         x: platformImage.width * 13 + platformSmall.width * 4 + 1900 -6  , y: 430, image: platformImage, walkable: true
     })
     ];
+    // horiPlatform = new Platfrom({
+    //      //x: platformImage.width * 10 + platformSmall.width * 3 + 1700 , y: 390, image: platformSmall, walkable: true
+    //      x: 110, y :400, image: platformSmall, walkable: true
+    //  });
+
+    horiPlatform = new Platfrom({
+        x: 100, //platformImage.width * 10 + platformSmall.width * 3 + 1700,
+        y: 390, // Adjust the y-coordinate as needed
+        image: platformSmall,
+        walkable: true
+    });
     genericObjects = [
         new GenericObject({
             x: -1,
@@ -347,6 +359,7 @@ let iceSpikes = [];
 let monster = "";
 let korg = "";
 let bunnies = [];
+let horiPlatform = "";
 
 const keys = {
     right: {
@@ -364,6 +377,33 @@ function renderScore() {
     c.font = "20px Arial";
     c.fillText("Score: " + score, 10, 30);
 }
+let platformDirection =1;
+function moveHoriPlatform(platform) {
+    const speed = 2;
+    //const maxX = platformImage.width * 10 + platformSmall.width * 3 + 1700;
+    //const minX = platformImage.width * 10 + platformSmall.width * 2 + 1700;
+    const maxX = 400;
+    const minX = 100;
+    if (platform.position.x >= maxX) {
+        platformDirection = -1; // Change direction to move left
+    } else if (platform.position.x <= minX) {
+        platformDirection = 1; // Change direction to move right
+    }
+
+    // Update the platform's position based on the direction
+    if (minX <= platform.position.x + speed * platformDirection &&
+        platform.position.x + speed * platformDirection <= maxX) {
+        platform.position.x += speed * platformDirection;
+    }
+
+    // Check if the player is on the platform and update the player's position
+    if (player.position.y + player.height <= platform.position.y
+        && player.position.y + player.height + player.velocity.y >= platform.position.y
+        && player.position.x + player.width >= platform.position.x 
+        && player.position.x <= platform.position.x + platform.width) {
+        player.position.x += speed * platformDirection;
+    }
+};
 
 function animate() {
     requestAnimationFrame(animate);
@@ -379,6 +419,7 @@ function animate() {
     platforms.forEach(platform => {
         platform.draw();
     })
+    horiPlatform.draw();
     monster.draw();
     bunnies.forEach(bunny => {
         bunny.draw(bunny.visable);
@@ -386,6 +427,7 @@ function animate() {
     korg.draw();
     player.update();
     renderScore();
+    moveHoriPlatform(horiPlatform);
     console.log(score);
     // console.log(player.position.x);
     // console.log("test");
@@ -407,6 +449,7 @@ function animate() {
             platforms.forEach(platform => {
                 platform.position.x -= player.speed;
             })
+            horiPlatform.position.x -= player.speed;
             genericObjects.forEach(genericObject => {
                 genericObject.position.x -= player.speed * .66;
             })
@@ -424,6 +467,7 @@ function animate() {
             platforms.forEach(platform => {
                 platform.position.x += player.speed;
             })
+            horiPlatform.position.x += player.speed;
             genericObjects.forEach(genericObject => {
                 genericObject.position.x += player.speed * .66;
             })
@@ -448,6 +492,14 @@ function animate() {
             player.velocity.y = 0;
         }
     })
+    // Stanna uppe på plattformen som rör sig horisontellt.
+    if(player.position.y + player.height <= horiPlatform.position.y
+        && player.position.y + player.height + player.velocity.y >= horiPlatform.position.y
+        && player.position.x + player.width >= horiPlatform.position.x 
+        && player.position.x <= horiPlatform.position.x + horiPlatform.width
+        && horiPlatform.walkable == true) {
+            player.velocity.y = 0;
+        };
 
     bunnies.forEach(bunny => {
         if(!bunny.taken &&
