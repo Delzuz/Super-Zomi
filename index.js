@@ -196,6 +196,7 @@ function init() {
     }), //new Platfrom({
        // x: platformImage.width * 10 + platformSmall.width * 3 + 1700 , y: 390, image: platformSmall, walkable: true
     //})
+    // Lina var här!
     , // Början av slut-trappan upp till korgen 
     new Platfrom({
         x: platformImage.width * 10 + platformSmall.width * 5 + 1900 -6  , y: 330, image: platformSmallTall, walkable: true
