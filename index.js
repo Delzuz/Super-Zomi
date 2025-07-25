@@ -233,6 +233,8 @@ function init() {
     //      x: 110, y :400, image: platformSmall, walkable: true
     //  });
 
+    // Lina is hackerwoman.
+
     horiPlatform = new Platfrom({
         x: 100, //platformImage.width * 10 + platformSmall.width * 3 + 1700,
         y: 390, // Adjust the y-coordinate as needed
