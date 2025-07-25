@@ -382,6 +382,7 @@ function moveHoriPlatform(platform) {
     const speed = 2;
     //const maxX = platformImage.width * 10 + platformSmall.width * 3 + 1700;
     //const minX = platformImage.width * 10 + platformSmall.width * 2 + 1700;
+    // One more time.
     const maxX = 400;
     const minX = 100;
     if (platform.position.x >= maxX) {
